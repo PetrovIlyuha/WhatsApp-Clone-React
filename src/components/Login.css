@@ -1,14 +1,18 @@
 .app {
   display: grid;
   place-items: center;
-  background-color: white;
+  background-color: rgb(240, 220, 220);
   height: 100vh;
   transform-origin: 0% 0%;
   position: relative;
 }
 
 .login {
-  background-color: #f8f8f8;
+  background: linear-gradient(
+    to top right,
+    rgb(25, 128, 25),
+    rgb(67, 238, 153)
+  );
   height: 100%;
   width: 100%;
   display: grid;

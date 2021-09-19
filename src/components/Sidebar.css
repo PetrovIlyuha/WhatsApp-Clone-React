@@ -4,7 +4,7 @@
   flex: 0.3;
   width: 30%;
   position: relative;
-  background-color: white;
+  background-color: rgb(245, 230, 230);
 }
 
 .sidebar__header {
@@ -13,7 +13,7 @@
   align-items: center;
   padding: 10px 12px;
   border-right: 1px solid lightgrey;
-  background-color: #ededed;
+  background: linear-gradient(to top right, rgb(10, 109, 10), #83e2c2);
 }
 
 .sidebar__header--left {

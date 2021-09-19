@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
+import { AUDIOS, IMAGES } from './firebase-constants';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBmb1Uw49c8-sBq4sQXYRDhtQLZvcE3bWI',
@@ -18,8 +19,8 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const database = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-const imagesStorage = firebase.storage().ref('images');
-const audioStorage = firebase.storage().ref('audios');
+const imagesStorage = firebase.storage().ref(IMAGES);
+const audioStorage = firebase.storage().ref(AUDIOS);
 const createTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 

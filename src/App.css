@@ -11,14 +11,14 @@
 .app {
   display: grid;
   place-items: center;
-  background-color: white;
+  background-color: rgb(255, 247, 247);
   height: 100vh;
   transform-origin: 0% 0%;
   position: relative;
 }
 
 .app__body {
-  background-color: #ededed;
+  background-color: #ecd8d8;
   display: flex;
   height: 100%;
   width: 100%;
