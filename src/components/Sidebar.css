@@ -105,6 +105,7 @@
   width: 100%;
   display: grid;
   place-items: center;
+  padding-top: 10px;
 }
 
 .sidebar__menu div > .MuiSvgIcon-root {
@@ -114,9 +115,13 @@
 .sidebar__menu div > .sidebar__menu--line {
   opacity: 0;
   width: 100%;
-  height: 3px;
-  background: #0000008a;
+  height: 2px;
+  background: #125727;
   margin-top: 5px;
+}
+
+.sidebar__menu > .sidebar__menu--selected > div {
+  background: linear-gradient(to right, #76b852, #8dc26f);
 }
 
 .sidebar__menu > .sidebar__menu--selected > div > .sidebar__menu--line {
@@ -130,6 +135,30 @@
   position: relative;
 }
 
+.sidebar__chat--addRoom {
+  position: absolute;
+  bottom: 2%;
+  right: 7%;
+}
+
+.addRoomButton {
+  color: white;
+  background-color: lightgray;
+}
+
+.sidebar__chat--addRoom button {
+  color: rgb(245, 241, 241);
+  background-color: rgb(93, 194, 93);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar__chat--addRoom button:hover {
+  background-color: rgb(49, 146, 86);
+}
+
+.sidebar__chat--addRoom button:active {
+  box-shadow: none;
+}
 .side {
   transform: scale(1) !important;
 }
