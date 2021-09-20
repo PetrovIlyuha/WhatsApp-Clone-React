@@ -8,7 +8,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  background-color: #e5ddd5;
+  background-color: #e9e2db;
   transform: translateZ(456px);
 }
 
@@ -35,14 +35,14 @@
 }
 
 .chat__background {
-  background-image: url("https://web.whatsapp.com/img/bg-chat-tile-light_686b98c9fdffef3f63127759e2057750.png");
+  background-image: url('../assets/whatsapp-tile.png');
   background-size: contain;
   background-position: center;
   position: absolute;
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.06;
+  opacity: 0.1;
 }
 
 .chat__header {
