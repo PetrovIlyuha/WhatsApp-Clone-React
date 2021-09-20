@@ -7,7 +7,15 @@ import {
 } from '@material-ui/icons';
 import './ChatFooter.css';
 
-export default function ChatFooter() {
+export default function ChatFooter({
+  messageInput,
+  sendMessage,
+  onMessageChange,
+  image,
+  room,
+  user,
+  roomId,
+}) {
   const [isRecording, setIsRecording] = useState(false);
 
   const buttonIcons = (
@@ -22,9 +30,21 @@ export default function ChatFooter() {
   return (
     <div className='chat__footer'>
       <form>
-        <input type='text' placeholder='Type a message' />
+        <input
+          type='text'
+          placeholder='Type a message'
+          value={messageInput}
+          onChange={!isRecording ? onMessageChange : null}
+        />
         {canRecord ? (
-          <button type='submit' className='send__btn'>
+          <button
+            onClick={
+              messageInput.trim() || (messageInput === '' && image)
+                ? sendMessage
+                : () => false
+            }
+            type='submit'
+            className='send__btn'>
             {buttonIcons}
           </button>
         ) : (
