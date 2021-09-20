@@ -14,10 +14,12 @@ import SidebarList from './SidebarList';
 import './Sidebar.css';
 import { ROOMS } from '../firebase-constants';
 import useRooms from '../hooks/useRooms';
+import useUsers from '../hooks/useUsers';
 
 export default function Sidebar({ user, page }) {
   const rooms = useRooms();
-  console.log({ rooms });
+  const users = useUsers(user);
+  // console.log({ rooms });
   const [menu, setMenu] = useState(1);
 
   const signOut = () => {
@@ -151,7 +153,7 @@ export default function Sidebar({ user, page }) {
       ) : menu === 2 ? (
         <SidebarList title='Rooms' data={rooms} />
       ) : menu === 3 ? (
-        <SidebarList title='Users' data={[]} />
+        <SidebarList title='Users' data={users} />
       ) : menu === 4 ? (
         <SidebarList title='Search Results' data={[]} />
       ) : null}
