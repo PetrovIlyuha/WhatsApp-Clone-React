@@ -21,9 +21,9 @@ export default function Sidebar({ user, page }) {
   const rooms = useRooms();
   const users = useUsers(user);
   const chats = useChats(user);
-  // console.log({ rooms });
   const [menu, setMenu] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
+
   const signOut = () => {
     auth.signOut();
   };
