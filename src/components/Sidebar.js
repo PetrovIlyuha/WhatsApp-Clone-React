@@ -12,16 +12,18 @@ import {
 import { auth, createTimestamp, database } from '../firebase';
 import SidebarList from './SidebarList';
 import './Sidebar.css';
-import { ROOMS } from '../firebase-constants';
+import { ROOMS, USERS } from '../firebase-constants';
 import useRooms from '../hooks/useRooms';
 import useUsers from '../hooks/useUsers';
+import useChats from '../hooks/useChats';
 
 export default function Sidebar({ user, page }) {
   const rooms = useRooms();
   const users = useUsers(user);
+  const chats = useChats(user);
   // console.log({ rooms });
   const [menu, setMenu] = useState(1);
-
+  const [searchResults, setSearchResults] = useState([]);
   const signOut = () => {
     auth.signOut();
   };
@@ -34,6 +36,30 @@ export default function Sidebar({ user, page }) {
         timestamp: createTimestamp(),
       });
     }
+  };
+
+  const searchUsersAndRooms = async event => {
+    event.preventDefault();
+    const query = event.target.elements.search.value;
+    const usersSnapshot = await database
+      .collection(USERS)
+      .where('name', '==', query)
+      .get();
+    const roomsSnapshot = await database
+      .collection(ROOMS)
+      .where('name', '==', query)
+      .get();
+    const usersFoundResults = usersSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const roomsFoundResults = roomsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const combinedSearchResults = [...usersFoundResults, ...roomsFoundResults];
+    setMenu(4);
+    setSearchResults(combinedSearchResults);
   };
 
   let Nav;
@@ -68,7 +94,9 @@ export default function Sidebar({ user, page }) {
         </div>
       </div>
       <div className='sidebar__search'>
-        <form className='sidebar__search--container'>
+        <form
+          onSubmit={searchUsersAndRooms}
+          className='sidebar__search--container'>
           <SearchOutlined />
           <input
             type='text'
@@ -136,26 +164,26 @@ export default function Sidebar({ user, page }) {
       {page.isMobile ? (
         <Switch>
           <Route path='/chats'>
-            <SidebarList title='Chats' data={[]} />
+            <SidebarList title='Chats' data={chats} />
           </Route>
           <Route path='/rooms'>
             <SidebarList title='Rooms' data={rooms} />
           </Route>
           <Route path='/users'>
-            <SidebarList title='Users' data={[]} />
+            <SidebarList title='Users' data={users} />
           </Route>
           <Route path='/search'>
-            <SidebarList title='Search Results' data={[]} />
+            <SidebarList title='Search Results' data={searchResults} />
           </Route>
         </Switch>
       ) : menu === 1 ? (
-        <SidebarList title='Chats' data={[]} />
+        <SidebarList title='Chats' data={chats} />
       ) : menu === 2 ? (
         <SidebarList title='Rooms' data={rooms} />
       ) : menu === 3 ? (
         <SidebarList title='Users' data={users} />
       ) : menu === 4 ? (
-        <SidebarList title='Search Results' data={[]} />
+        <SidebarList title='Search Results' data={searchResults} />
       ) : null}
 
       <div className='sidebar__chat--addRoom'>
