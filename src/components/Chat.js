@@ -8,12 +8,7 @@ import ChatFooter from '../components/ChatFooter';
 import MediaPreview from '../components/MediaPreview';
 import { Avatar, IconButton, Menu, MenuItem } from '@material-ui/core';
 import './Chat.css';
-import {
-  AddPhotoAlternate,
-  ArrowBack,
-  MoreVert,
-  Room,
-} from '@material-ui/icons';
+import { AddPhotoAlternate, ArrowBack, MoreVert } from '@material-ui/icons';
 import { database, imagesStorage, createTimestamp } from '../firebase';
 import { CHATS, MESSAGES, ROOMS, USERS } from '../firebase-constants';
 import useChatMessages from '../hooks/useChatMessages';
@@ -22,6 +17,7 @@ export default function Chat({ user, page }) {
   const [messageInput, setMessageInput] = useState('');
   const [image, setImage] = useState(null);
   const [src, setSrc] = useState('');
+  const [audioId, setAudioId] = useState('');
   const { roomId } = useParams();
   const history = useHistory();
   const room = useRoom(roomId, user.uid);
@@ -168,6 +164,7 @@ export default function Chat({ user, page }) {
         room={room}
         user={user}
         roomId={roomId}
+        setAudioId={setAudioId}
       />
     </div>
   );
