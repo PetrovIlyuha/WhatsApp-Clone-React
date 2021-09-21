@@ -6,10 +6,21 @@ import useRoom from '../hooks/useRoom';
 import ChatMessages from '../components/ChatMessages';
 import ChatFooter from '../components/ChatFooter';
 import MediaPreview from '../components/MediaPreview';
-import { Avatar, IconButton, Menu, MenuItem } from '@material-ui/core';
+import {
+  Avatar,
+  CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@material-ui/core';
 import './Chat.css';
 import { AddPhotoAlternate, ArrowBack, MoreVert } from '@material-ui/icons';
-import { database, imagesStorage, createTimestamp } from '../firebase';
+import {
+  database,
+  imagesStorage,
+  createTimestamp,
+  audioStorage,
+} from '../firebase';
 import { CHATS, MESSAGES, ROOMS, USERS } from '../firebase-constants';
 import useChatMessages from '../hooks/useChatMessages';
 
@@ -18,11 +29,12 @@ export default function Chat({ user, page }) {
   const [image, setImage] = useState(null);
   const [src, setSrc] = useState('');
   const [audioId, setAudioId] = useState('');
+  const [openMenu, setOpenMenu] = useState(false);
+  const [isDeletingRoom, setDeletingRoom] = useState(false);
   const { roomId } = useParams();
   const history = useHistory();
   const room = useRoom(roomId, user.uid);
   const messages = useChatMessages(roomId);
-  console.log(messages);
   const onMessageChange = event => {
     setMessageInput(event.target.value);
   };
@@ -109,6 +121,44 @@ export default function Chat({ user, page }) {
     setImage(null);
   };
 
+  const deleteRoom = async () => {
+    setOpenMenu(false);
+    setDeletingRoom(true);
+
+    try {
+      const roomReference = database.collection(ROOMS).doc(roomId);
+      const roomMessages = await roomReference.collection(MESSAGES).get();
+      const roomAudioFiles = [];
+      const roomImages = [];
+      roomMessages.docs.forEach(doc => {
+        if (doc.data().audioName) {
+          roomAudioFiles.push(doc.data().audioName);
+        } else if (doc.data().imageName) {
+          roomImages.push(doc.data().imageName);
+        }
+      });
+      await Promise.all([
+        ...roomMessages.docs.map(doc => doc.ref.delete()),
+        ...roomImages.map(image => imagesStorage.child(image).delete()),
+        ...roomAudioFiles.map(audioFile =>
+          audioStorage.child(audioFile).delete(),
+        ),
+        database
+          .collection(USERS)
+          .doc(user.uid)
+          .collection(CHATS)
+          .doc(roomId)
+          .delete(),
+        roomReference.delete(),
+      ]);
+    } catch (error) {
+      console.error('error deleting room', error.message);
+    } finally {
+      setDeletingRoom(false);
+      page.isMobile ? history.goBack() : history.replace('/chats');
+    }
+  };
+
   return (
     <div className='chat'>
       <div style={{ height: page.height }} className='chat__background' />
@@ -140,11 +190,16 @@ export default function Chat({ user, page }) {
               <AddPhotoAlternate />
             </label>
           </IconButton>
-          <IconButton>
+          <IconButton onClick={e => setOpenMenu(e.currentTarget)}>
             <MoreVert />
           </IconButton>
-          <Menu id='menu' keepMounted open={false}>
-            <MenuItem>Delete Room</MenuItem>
+          <Menu
+            id='menu'
+            anchorEl={openMenu}
+            keepMounted
+            open={Boolean(openMenu)}
+            onClose={() => setOpenMenu(null)}>
+            <MenuItem onClick={deleteRoom}>Delete Room</MenuItem>
           </Menu>
         </div>
       </div>
@@ -172,6 +227,12 @@ export default function Chat({ user, page }) {
         roomId={roomId}
         setAudioId={setAudioId}
       />
+
+      {isDeletingRoom && (
+        <div className='chat__deleting'>
+          <CircularProgress />
+        </div>
+      )}
     </div>
   );
 }

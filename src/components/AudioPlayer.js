@@ -116,6 +116,23 @@ export default function AudioPlayer({
     }
   };
 
+  const moveAudioSlider = e => {
+    const value = e.target.value;
+    const { duration } = audio.current;
+    if (isMediaLoaded) {
+      const moveTo = duration * (value / 100);
+      audio.current.currentTime = moveTo;
+      setSliderValue(value);
+    }
+  };
+
+  useEffect(() => {
+    if (audioId !== id) {
+      audio.current.pause();
+      setIsPlaying(false);
+    }
+  }, [audioId, id]);
+
   return (
     <React.Fragment>
       <div className={`audioplayer ${sender ? '' : 'audioplayer__alt'}`}>
@@ -135,6 +152,7 @@ export default function AudioPlayer({
             type='range'
             min='1'
             max='100'
+            onChange={moveAudioSlider}
             value={sliderValue}
             className='audioplayer__slider'
           />
