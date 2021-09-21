@@ -35,6 +35,8 @@ export default function Sidebar({ user, page }) {
         name: roomName,
         timestamp: createTimestamp(),
       });
+    } else {
+      return;
     }
   };
 

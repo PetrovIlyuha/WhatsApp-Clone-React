@@ -151,7 +151,13 @@ export default function Chat({ user, page }) {
       <div className='chat__body--container'>
         <div className='chat__body' style={{ height: page.height - 68 }}>
           {messages && (
-            <ChatMessages messages={messages} user={user} roomId={roomId} />
+            <ChatMessages
+              messages={messages}
+              user={user}
+              roomId={roomId}
+              audioId={audioId}
+              setAudioId={setAudioId}
+            />
           )}
         </div>
       </div>
